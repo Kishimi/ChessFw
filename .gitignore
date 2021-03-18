@@ -1,0 +1,9 @@
+# Specify filepatterns you want git to ignore.
+
+# linux
+ConsoleChess.make
+ChessFwTest.make
+ChessFw.make
+Makefile
+bin
+obj
