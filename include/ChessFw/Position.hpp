@@ -1,82 +1,54 @@
 #pragma once
 
-#include <limits>
-
 namespace ChessFw
 {
 
-/**
- * This enum is just a nice feature to allow passing files as A, B, C, etc. instead of numbers (1, 2, 3, ...) just like chess
- */
-enum File : unsigned
+enum class File : unsigned
 {
-	FileA,
-	FileB,
-	FileC,
-	FileD,
-	FileE,
-	FileF,
-	FileG,
-	FileH,
+	A,
+	B,
+	C,
+	D,
+	E,
+	F,
+	G,
+	H,
 
-	FileNone = std::numeric_limits<unsigned>::max()
+	None
 };
 
-/**
- * Because we have the file enum, lets just have a rank enum
- */
-enum Rank : unsigned
+enum class Rank : unsigned
 {
-	Rank1,
-	Rank2,
-	Rank3,
-	Rank4,
-	Rank5,
-	Rank6,
-	Rank7,
-	Rank8,
+	One,
+	Two,
+	Three,
+	Four,
+	Five,
+	Six,
+	Seven,
+	Eight,
 
-	RankNone = std::numeric_limits<unsigned>::max()
+	None
 };
 
 class Position final
 {
 public:
-	/**
-	 * Create a position with default values (0, 0)
-	 */
 	constexpr Position()
-		: file(FileNone)
-		, rank(RankNone) {}
+		: file(File::None)
+		, rank(Rank::None) {}
 
-		/**
-		 * Constructs a position
-		 * @param  file The file of the position (or x position)
-		 * @param  rank The rank of the position (or y position)
-		 */
 	constexpr Position(const File file, const Rank rank)
 		: file(file)
 		, rank(rank) {}
 
 public:
-
-	/**
-	 * Compare two positions for equality
-	 * @param lhs The lefthandside value of the comparison
-	 * @param rhs The righthandside value of the comparison
-	 * @return True if both values are equal
-	 */
-	friend constexpr bool operator==(const Position &lhs, const Position &rhs)
+	friend constexpr auto operator==(const Position &lhs, const Position &rhs) -> bool
 	{
 		return lhs.file == rhs.file && lhs.rank == rhs.rank;
 	}
 
-	/**
-	 * Compare two positions for inequality
-	 * @param lhs The lefthandside value of the comparison
-	 * @param rhs The righthandside value of the comparison
-	 */
-	friend constexpr bool operator!=(const Position &lhs, const Position &rhs)
+	friend constexpr auto operator!=(const Position &lhs, const Position &rhs) -> bool
 	{
 		return !(lhs == rhs);
 	}
@@ -85,5 +57,17 @@ public:
 	File file;
 	Rank rank;
 };
+
+/**
+ * This function is used to convert ChessFw::File or ChessFw::Rank to an unsigned int easily
+ * @tparam T The type (Either ChessFw::File or ChessFw::Rank)
+ * @param t The value of the file or rank
+ * @return File or rank as unsigned int
+ */
+template<typename T>
+auto ToUnsigned(const T t) -> unsigned
+{
+	return static_cast<unsigned>(t);
+}
 
 }

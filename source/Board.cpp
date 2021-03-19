@@ -3,39 +3,32 @@
 namespace ChessFw
 {
 
-Board::Board(const std::string &fen)
-	: colorToMove(Piece::White)
+Board::Board(const std::vector<Piece> &pieces)
+	: pieces(pieces)
 {
 }
 
-void Board::HalfMove(const std::string &move)
+void Board::HalfMove(const Move &move)
 {
-	/**
-	 * TODO:
-	 * - Check if the move is valid
-	 *   - If so, execute it
-	 *   - else throw an InvalidMoveException or something
-	 *     (it's up to the application to prevent the player doing invalid moves)
-	 */
-
-	// Change the color to move
-	colorToMove = colorToMove == Piece::White
-		? Piece::Black : Piece::White;
 }
 
-bool Board::IsValidMove(const std::string &move) const
+void Board::FullMove(const Move &whiteMove, const Move &blackMove)
 {
-	return true;
 }
 
-Piece::Color Board::Checkmate() const
+std::vector<Piece> Board::GetPieces() const
 {
-	return colorToMove; // TODO: Checkmate algorithm
+	return pieces;
+}
+
+bool Board::CheckMate() const
+{
+	return false;
 }
 
 Piece::Color Board::ColorToMove() const
 {
-	return colorToMove;
+	return Piece::NoColor;
 }
 
 }

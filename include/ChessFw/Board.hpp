@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Piece.hpp"
+#include "Move.hpp"
 
 namespace ChessFw
 {
@@ -11,47 +12,51 @@ namespace ChessFw
 class Board final
 {
 public:
-	/**
-	 * This creates a board using fen notation
-	 * @param Fen A string in fen notation
-	 */
-	Board(const std::string &fen);
+	struct Presets final
+	{
+		static std::vector<Piece> Default();
+	};
+
+public:
+	constexpr static unsigned files = 8;
+	constexpr static unsigned ranks = 8;
+
+public:
+	Board(const std::vector<Piece> &pieces);
 
 public:
 	/**
-	 * This function makes a half move on the board
-	 * @param move The move in san notation, move is executed for the color to move
+	 * This function does half a move on the board. 
+	 * @param move The move to do.
 	 */
-	void HalfMove(const std::string &move);
+	void HalfMove(const Move &move);
 
 	/**
-	 * This function makes a move on the board, both moves should be in the SAN notation
-	 * @param white White move in SAN notation
-	 * @param black Black move in SAN notation
-	 */
-	void Move(const std::string &white, const std::string &black);
+	 * This function does a full move on the board
+	 * @param whiteMove The move for white
+	 * @param blackMove The move for black
+	*/
+	void FullMove(const Move &whiteMove, const Move &blackMove);
 
 	/**
-	 * Check wether a move is a valid move or not
-	 * @param  move The move in san notation
-	 * @return      [description]
+	 * Get a copy of all the pieces on the board
+	 * @return All the pieces on the board
 	 */
-	bool IsValidMove(const std::string &move) const;
+	std::vector<Piece> GetPieces() const;
 
 	/**
-	 * Check wether there is checkmate on the board or not
-	 * @return Zero if not, else the color that won
+	 * Check wether there's checkmate or not
+	 * @return True if checkmate (ChessFw::Board::ColorToMove() will return the color that lost)
 	 */
-	Piece::Color Checkmate() const;
+	bool CheckMate() const;
 
 	/**
-	 * Get the current color to move
-	 * @return Piece::Color being the color that has the next move
+	 * Get the color that has to move
+	 * @return The color that has the next move
 	 */
-	Piece::Color ColorToMove() const;
+	auto ColorToMove() const -> Piece::Color;
 
 private:
-	Piece::Color colorToMove;
 	std::vector<Piece> pieces;
 };
 

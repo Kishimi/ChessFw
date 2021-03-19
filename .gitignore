@@ -7,3 +7,11 @@ ChessFw.make
 Makefile
 bin
 obj
+
+# windows
+.vs
+ChessFw.sln
+ChessFw.vcxproj
+ChessFw.vcxproj.filters
+ChessFwTest.vcxproj
+ConsoleChess.vcxproj
