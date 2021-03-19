@@ -27,6 +27,15 @@ public:
 	};
 
 public:
+	constexpr Piece()
+		: type(Type::None)
+		, color(Color::NoColor) {}
+
+	constexpr Piece(const Type type, const Color color)
+		: type(type)
+		, color(color) {}
+
+public:
 	/**
 	 * Get the type of a piece
 	 * @return The type of the piece
@@ -38,6 +47,10 @@ public:
 	 * @return The color of the piece
 	*/
 	Color GetColor() const;
+
+private:
+	Type type;
+	Color color;
 };
 
 }

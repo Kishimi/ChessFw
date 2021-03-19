@@ -43,12 +43,12 @@ public:
 		, rank(rank) {}
 
 public:
-	friend constexpr auto operator==(const Position &lhs, const Position &rhs) -> bool
+	friend constexpr bool operator==(const Position &lhs, const Position &rhs)
 	{
 		return lhs.file == rhs.file && lhs.rank == rhs.rank;
 	}
 
-	friend constexpr auto operator!=(const Position &lhs, const Position &rhs) -> bool
+	friend constexpr bool operator!=(const Position &lhs, const Position &rhs)
 	{
 		return !(lhs == rhs);
 	}
@@ -65,7 +65,7 @@ public:
  * @return File or rank as unsigned int
  */
 template<typename T>
-auto ToUnsigned(const T t) -> unsigned
+unsigned ToUnsigned(const T t)
 {
 	return static_cast<unsigned>(t);
 }

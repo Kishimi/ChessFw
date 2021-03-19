@@ -5,33 +5,19 @@
 
 int main()
 {
-	ChessFw::Board board = ChessFw::Board::Presets::Default();
+	ChessFw::Board board = ChessFw::Fen::GetPieces("8/8/8/2k5/4K3/8/8/8");
 	// ChessFw::Engine<> engine;
 
 	while (!board.CheckMate())
 	{
-		system("clear");
-
-		if (board.ColorToMove() == ChessFw::Piece::White)
-			std::cout << "White: ";
-		else if (board.ColorToMove() == ChessFw::Piece::Black)
-			std::cout << "Black: ";
-
-		std::string move;
-		std::getline(std::cin, move);
-
-		board.HalfMove(ChessFw::San::ToMove(move));
-		// board.Move(move, engine.GetMove());
+		std::cout << "\n  ";
+		for (unsigned char c = 'A'; c <= 'H'; c++)
+			std::cout << c << " ";
+		std::cout << "\n  ";
 
 		auto pieces = board.GetPieces();
-		for (unsigned x = 0; const ChessFw::Piece& piece : pieces)
+		for (unsigned x = 0, y = 0; const ChessFw::Piece &piece : pieces)
 		{
-			if (x >= ChessFw::Board::files)
-			{
-				x = 0;
-				std::cout << "\n";
-			}
-
 			char pieceChar = '.';
 			
 			switch (piece.GetType())
@@ -65,14 +51,34 @@ int main()
 			}
 
 			if (piece.GetColor() == ChessFw::Piece::Black)
-				pieceChar -= ('a' - 'A'); // to lowercase
+				pieceChar = std::tolower(pieceChar);
 
-			std::cout << pieceChar;
+			std::cout << pieceChar << " ";
 
 			x++;
+
+			if (x >= ChessFw::Board::files)
+			{
+				x = 0;
+				y++;
+				std::cout << y << "\n  ";
+			}
 		}
 
 		std::cout << "\n";
+
+		if (board.ColorToMove() == ChessFw::Piece::White)
+			std::cout << "White: ";
+		else if (board.ColorToMove() == ChessFw::Piece::Black)
+			std::cout << "Black: ";
+
+		std::string move;
+		std::getline(std::cin, move);
+
+		system("cls");
+
+		board.HalfMove(ChessFw::San::ToMove(move));
+		// board.Move(move, engine.GetMove());
 	}
 
 	return 0;
