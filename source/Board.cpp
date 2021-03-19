@@ -56,6 +56,8 @@ std::vector<Position> Board::GetPossibleMoves(const Position &position) const
 			moves.insert(moves.end(), diagonalMoves.begin(), diagonalMoves.end());
 		} break;
 	}
+
+	return moves;
 }
 
 std::vector<Position> Board::GetStraightMoves(const Position &position, const unsigned steps) const
