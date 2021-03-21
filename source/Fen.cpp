@@ -58,7 +58,7 @@ std::vector<Piece> Fen::GetPieces(const std::string &fen)
 			const unsigned num = c - '0';
 
 			for (unsigned i = 0; i < num; i++)
-				pieces.push_back(Piece(Piece::None, Piece::NoColor));
+				pieces.push_back(Piece());
 
 			continue;
 		}

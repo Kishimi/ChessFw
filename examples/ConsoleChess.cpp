@@ -67,18 +67,38 @@ int main()
 
 		std::cout << "\n";
 
-		if (board.ColorToMove() == ChessFw::Piece::White)
-			std::cout << "White: ";
-		else if (board.ColorToMove() == ChessFw::Piece::Black)
-			std::cout << "Black: ";
+		std::cout << (board.ColorToMove() == ChessFw::Piece::White ? "White" : "Black") << " to move.\n";
 
-		std::string move;
-		std::getline(std::cin, move);
+		std::cout << "Abort (y)?: ";
+		char c;
+		std::cin >> c;
+		
+		if (c == 'y')
+			break;
 
-		system("cls");
+		std::cout << "Origin file: ";
+		unsigned originFile;
+		std::cin >> originFile;
 
-		board.HalfMove(ChessFw::San::ToMove(move));
-		// board.Move(move, engine.GetMove());
+		std::cout << "Origin rank: ";
+		unsigned originRank;
+		std::cin >> originRank;
+
+		std::cout << "Destination file: ";
+		unsigned destinationFile;
+		std::cin >> destinationFile;
+
+		std::cout << "Destination rank: ";
+		unsigned destinationRank;
+		std::cin >> destinationRank;
+
+		ChessFw::Move move(
+			ChessFw::Position(static_cast<ChessFw::File>(originFile), static_cast<ChessFw::Rank>(originRank)),
+			ChessFw::Position(static_cast<ChessFw::File>(destinationFile), static_cast<ChessFw::Rank>(destinationRank)));
+
+		board.HalfMove(move);
+
+		// system("clear");
 	}
 
 	return 0;

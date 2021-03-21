@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include <string>
 #include <vector>
 
@@ -30,15 +32,17 @@ public:
 	/**
 	 * This function does half a move on the board. 
 	 * @param move The move to do.
+	 * @return True if the move was executed
 	 */
-	void HalfMove(const Move &move);
+	bool HalfMove(const Move &move);
 
 	/**
 	 * This function does a full move on the board
 	 * @param whiteMove The move for white
 	 * @param blackMove The move for black
+	 * @return True if both moves were executed
 	*/
-	void FullMove(const Move &whiteMove, const Move &blackMove);
+	bool FullMove(const Move &whiteMove, const Move &blackMove);
 
 	/**
 	 * Get a copy of all the pieces on the board
@@ -76,18 +80,18 @@ private:
 	/**
 	 * Get all straight moves possible from a position
 	 * @param position The position where the piece is
-	 * @param steps How many straight steps are max possible. 0 means infinite
+	 * @param steps How many straight steps are max possible.
 	 * @return All straight moves possible from that position
 	 */
-	std::vector<Position> GetStraightMoves(const Position &position, const unsigned steps = 0) const;
+	std::vector<Position> GetStraightMoves(const Position &position, const unsigned steps = 8) const;
 
 	/**
 	 * Get all diagonal moves possible from a position
 	 * @param position The position where the piece is
-	 * @param steps How many diagonal steps are max possible. 0 means infinite
+	 * @param steps How many diagonal steps are max possible.
 	 * @return All diagonal moves possible from that position
 	 */
-	std::vector<Position> GetDiagonalMoves(const Position &position, const unsigned steps = 0) const;
+	std::vector<Position> GetDiagonalMoves(const Position &position, const unsigned steps = 8) const;
 
 	/**
 	 * Get a piece at a specific position
@@ -99,6 +103,7 @@ private:
 
 private:
 	std::vector<Piece> pieces;
+	Piece::Color colorToMove;
 };
 
 }
