@@ -29,28 +29,42 @@ public:
 public:
 	constexpr Piece()
 		: type(Type::None)
-		, color(Color::NoColor) {}
+		, color(Color::NoColor)
+		, isFirstMove(true) {}
 
-	constexpr Piece(const Type type, const Color color)
+	constexpr Piece(const Type type, const Color color, const bool isFirstMove = true)
 		: type(type)
-		, color(color) {}
+		, color(color)
+		, isFirstMove(isFirstMove) {}
 
 public:
 	/**
 	 * Get the type of a piece
 	 * @return The type of the piece
 	 */
-	Type GetType() const;
+	constexpr Type GetType() const
+	{
+		return type;
+	}
 
 	/**
 	 * Get the color of a piece
 	 * @return The color of the piece
 	*/
-	Color GetColor() const;
+	constexpr Color GetColor() const
+	{
+		return color;
+	}
+
+	constexpr bool IsFirstMove() const
+	{
+		return isFirstMove;
+	}
 
 private:
 	Type type;
 	Color color;
+	bool isFirstMove;
 };
 
 }

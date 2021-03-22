@@ -51,10 +51,28 @@ public:
 	std::vector<Piece> GetPieces() const;
 
 	/**
+	 * Check wether the game is over or not
+	 * @return True if the game is over
+	 */
+	bool GameOver() const;
+
+	/**
+	 * Check wether it's a draw or not
+	 * @return True if it's a draw
+	 */
+	bool Draw() const;
+
+	/**
+	 * Check wether there's check or not
+	 * @return True if check (ChessFw::Board::ColorToMove is the color in check)
+	 */
+	bool Check() const;
+
+	/**
 	 * Check wether there's checkmate or not
 	 * @return True if checkmate (ChessFw::Board::ColorToMove() will return the color that lost)
 	 */
-	bool CheckMate() const;
+	bool Mate() const;
 
 	/**
 	 * Get the color that has to move

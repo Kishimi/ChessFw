@@ -16,8 +16,6 @@ bool Board::HalfMove(const Move &move)
 	if (std::find(possibleMoves.begin(), possibleMoves.end(), move.GetDestination()) == possibleMoves.end())
 		return false;
 
-	std::cout << "\tIs possible\n";
-
 	Piece &origin = this->GetPiece(move.GetOrigin());
 	Piece &destination = this->GetPiece(move.GetDestination());
 
@@ -42,14 +40,29 @@ std::vector<Piece> Board::GetPieces() const
 	return pieces;
 }
 
-bool Board::CheckMate() const
+bool Board::GameOver() const
+{
+	return this->Draw() || this->Mate();
+}
+
+bool Board::Draw() const
+{
+	return false;
+}
+
+bool Board::Check() const
+{
+	return false;
+}
+
+bool Board::Mate() const
 {
 	return false;
 }
 
 Piece::Color Board::ColorToMove() const
 {
-	return Piece::White;
+	return colorToMove;
 }
 
 bool Board::IsValidMove(const Move &move) const
@@ -73,6 +86,94 @@ std::vector<Position> Board::GetPossibleMoves(const Position &position) const
 			// append the moves
 			moves.insert(moves.end(), straightMoves.begin(), straightMoves.end());
 			moves.insert(moves.end(), diagonalMoves.begin(), diagonalMoves.end());
+		} break;
+
+		case Piece::Queen:
+		{
+			const std::vector<Position> straightMoves = this->GetStraightMoves(position);
+			const std::vector<Position> diagonalMoves = this->GetDiagonalMoves(position);
+
+			moves.insert(moves.end(), straightMoves.begin(), straightMoves.end());
+			moves.insert(moves.end(), diagonalMoves.begin(), diagonalMoves.end());
+		} break;
+
+		case Piece::Bishop:
+		{
+			const std::vector<Position> diagonalMoves = this->GetDiagonalMoves(position);
+
+			moves.insert(moves.end(), diagonalMoves.begin(), diagonalMoves.end());
+		} break;
+
+		case Piece::Knight:
+		{
+			const unsigned file = ToUnsigned(position.file);
+			const unsigned rank = ToUnsigned(position.rank);
+
+			if (file >= 2 && rank >= 1)
+				moves.push_back(Position(file - 2, rank - 1));
+			if (file >= 1 && rank >= 2)
+				moves.push_back(Position(file - 1, rank - 2));
+			if (file <= 5 && rank >= 1)
+				moves.push_back(Position(file + 2, rank - 1));
+			if (file <= 6 && rank >= 2)
+				moves.push_back(Position(file + 1, rank - 2));
+			if (file >= 2 && rank <= 6)
+				moves.push_back(Position(file - 2, rank + 1));
+			if (file >= 1 && rank <= 5)
+				moves.push_back(Position(file - 1, rank + 2));
+			if (file <= 5 && rank <= 6)
+				moves.push_back(Position(file + 2, rank + 1));
+			if (file <= 6 && rank <= 5)
+				moves.push_back(Position(file + 1, rank + 2));
+		} break;
+
+		case Piece::Rook:
+		{
+			const std::vector<Position> straightMoves = this->GetStraightMoves(position);
+
+			moves.insert(moves.end(), straightMoves.begin(), straightMoves.end());
+		} break;
+
+		case Piece::Pawn:
+		{
+			if (piece.GetColor() == Piece::White)
+			{
+				// First move allows 2 fields forward
+				if (piece.IsFirstMove() && this->GetPiece(Position(position.file, ToUnsigned(position.rank) - 2)).GetType() == Piece::None)
+					moves.push_back(Position(position.file, ToUnsigned(position.rank) - 2));
+
+				if (this->GetPiece(Position(position.file, ToUnsigned(position.rank) - 1)).GetType() == Piece::None)
+					moves.push_back(Position(position.file, ToUnsigned(position.rank) - 1));
+
+				// Capture
+				Position captureLeft(ToUnsigned(position.file) - 1, ToUnsigned(position.rank) - 1);
+				Position captureRight(ToUnsigned(position.file) + 1, ToUnsigned(position.rank) - 1);
+
+				if (this->GetPiece(captureLeft).GetType() != Piece::None)
+					moves.push_back(captureLeft);
+
+				if (this->GetPiece(captureRight).GetType() != Piece::None)
+					moves.push_back(captureRight);
+			}
+			else if (piece.GetColor() == Piece::Black)
+			{
+				// First move allows 2 fields forward
+				if (piece.IsFirstMove() && this->GetPiece(Position(position.file, ToUnsigned(position.rank) + 2)).GetType() == Piece::None)
+					moves.push_back(Position(position.file, ToUnsigned(position.rank) + 2));
+
+				if (this->GetPiece(Position(position.file, ToUnsigned(position.rank) + 1)).GetType() == Piece::None)
+					moves.push_back(Position(position.file, ToUnsigned(position.rank) + 1));
+
+				// Capture
+				Position captureLeft(ToUnsigned(position.file) - 1, ToUnsigned(position.rank) + 1);
+				Position captureRight(ToUnsigned(position.file) + 1, ToUnsigned(position.rank) + 1);
+
+				if (this->GetPiece(captureLeft).GetType() != Piece::None)
+					moves.push_back(captureLeft);
+
+				if (this->GetPiece(captureRight).GetType() != Piece::None)
+					moves.push_back(captureRight);
+			}
 		} break;
 	}
 
@@ -112,7 +213,7 @@ std::vector<Position> Board::GetStraightMoves(const Position &position, const un
 		}
 
 		// up
-		if (ToUnsigned(position.rank) <= step && canGoUp)
+		if (ToUnsigned(position.rank) >= step && canGoUp)
 		{
 			Position up(position.file, ToUnsigned(position.rank) - step);
 
@@ -139,23 +240,55 @@ std::vector<Position> Board::GetDiagonalMoves(const Position &position, const un
 {
 	std::vector<Position> moves;
 
+	bool canGoUpLeft = true;
+	bool canGoUpRight = true;
+	bool canGoDownLeft = true;
+	bool canGoDownRight = true;
+
 	for (unsigned step = 1; step <= steps; step++)
 	{
 		// up-left
-		if (ToUnsigned(position.file) <= step && ToUnsigned(position.rank) <= step)
+		if (ToUnsigned(position.file) >= step && ToUnsigned(position.rank) >= step && canGoUpLeft)
 		{
-			Position up_left(ToUnsigned(position.file) - step, ToUnsigned(position.rank) - step);
+			Position upLeft(ToUnsigned(position.file) - step, ToUnsigned(position.rank) - step);
 
-			if (this->GetPiece(up_left).GetType() == Piece::None)
-				moves.push_back(up_left);
-			else
-
+			moves.push_back(upLeft);
+			if (this->GetPiece(upLeft).GetType() != Piece::None)
+				canGoUpLeft = false;
 		}
 
 		// up-right
+		if (ToUnsigned(position.file) + step <= ToUnsigned(File::H) && ToUnsigned(position.rank) >= step && canGoUpRight)
+		{
+			Position upRight(ToUnsigned(position.file) + step, ToUnsigned(position.rank) - step);
+
+			moves.push_back(upRight);
+			if (this->GetPiece(upRight).GetType() != Piece::None)
+				canGoUpRight = false;
+		}
+
 		// down-left
+		if (ToUnsigned(position.file) >= step && ToUnsigned(position.rank) + step <= ToUnsigned(Rank::Eight) && canGoDownLeft)
+		{
+			Position downLeft(ToUnsigned(position.file) - step, ToUnsigned(position.rank) + step);
+
+			moves.push_back(downLeft);
+			if (this->GetPiece(downLeft).GetType() != Piece::None)
+				canGoDownLeft = false;
+		}
+
 		// down-right
+		if (ToUnsigned(position.file) + step <= ToUnsigned(File::H) && ToUnsigned(position.rank) + step <= ToUnsigned(Rank::Eight) && canGoDownRight)
+		{
+			Position downRight(ToUnsigned(position.file) + step, ToUnsigned(position.rank) + step);
+
+			moves.push_back(downRight);
+			if (this->GetPiece(downRight).GetType() != Piece::None)
+				canGoDownRight = false;
+		}
 	}
+
+	return moves;
 }
 
 Piece& Board::GetPiece(const Position &position)
