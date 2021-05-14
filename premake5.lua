@@ -43,7 +43,7 @@ project "ChessApp"
 	files { "Examples/ChessApp/Source/**.cpp" }
 	includedirs { "Include" }
 
-	links { "ChessFw", "sfml-graphics", "sfml-system" }
+	links { "ChessFw", "sfml-graphics", "sfml-system", "sfml-window" }
 
 	filter "configurations:Debug"
 		defines { "DEBUG" }
