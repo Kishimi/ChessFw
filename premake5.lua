@@ -1,5 +1,5 @@
 workspace "ChessFw"
-	configurations { "debug", "release" }
+	configurations { "Debug", "Release" }
 
 function useCpp20()
 	filter "system:windows"
@@ -16,38 +16,39 @@ project "ChessFw"
 	language "C++"
 	useCpp20()
 
-	targetdir "bin/%{cfg.buildcfg}"
+	targetdir "Bin/%{cfg.buildcfg}"
+	builddir "Obj"
 
-	files { "include/**.hpp", "source/**.cpp" }
-	includedirs { "include" }
+	files { "Include/**.hpp", "Source/**.cpp" }
+	includedirs { "Include" }
 
-	filter "configurations:debug"
+	filter "configurations:Debug"
 		defines { "DEBUG" }
 		symbols "On"
 
-	filter "configurations:release"
+	filter "configurations:Release"
 		defines { "RELEASE" }
 		optimize "On"
 
 	filter {}
 
-project "ConsoleChess"
+project "SDL2Chess"
 	kind "ConsoleApp"
 	language "C++"
 	useCpp20()
-	
-	targetdir "bin/%{cfg.buildcfg}"
 
-	files { "examples/ConsoleChess.cpp" }
-	includedirs { "include" }
-	links { "ChessFw" }
+	targetdir "Examples/Bin/%{cfg.buildcfg}"
+	builddir "Examples/Obj"
 
-	filter "configurations:debug"
+	files { "Examples/Source/**.cpp" }
+	includedirs { "Include" }
+
+	links { "ChessFw", "SDL2", "SDL2_image" }
+
+	filter "configurations:Debug"
 		defines { "DEBUG" }
 		symbols "On"
 
-	filter "configurations:release"
+	filter "configurations:Release"
 		defines { "RELEASE" }
 		optimize "On"
-
-	filter {}
