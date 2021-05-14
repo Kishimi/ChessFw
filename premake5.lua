@@ -40,7 +40,7 @@ project "SDL2Chess"
 	targetdir "Examples/Bin/%{cfg.buildcfg}"
 	builddir "Examples/Obj"
 
-	files { "Examples/Source/**.cpp" }
+	files { "Examples/SDL2Chess/Source/**.cpp" }
 	includedirs { "Include" }
 
 	links { "ChessFw", "SDL2", "SDL2_image" }
