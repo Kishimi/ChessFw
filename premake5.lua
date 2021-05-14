@@ -17,7 +17,7 @@ project "ChessFw"
 	useCpp20()
 
 	targetdir "Bin/%{cfg.buildcfg}"
-	builddir "Obj"
+	objdir "Obj"
 
 	files { "Include/**.hpp", "Source/**.cpp" }
 	includedirs { "Include" }
@@ -32,18 +32,18 @@ project "ChessFw"
 
 	filter {}
 
-project "SDL2Chess"
+project "ChessApp"
 	kind "ConsoleApp"
 	language "C++"
 	useCpp20()
 
 	targetdir "Examples/Bin/%{cfg.buildcfg}"
-	builddir "Examples/Obj"
+	objdir "Examples/Obj"
 
-	files { "Examples/SDL2Chess/Source/**.cpp" }
+	files { "Examples/ChessApp/Source/**.cpp" }
 	includedirs { "Include" }
 
-	links { "ChessFw", "SDL2", "SDL2_image" }
+	links { "ChessFw", "sfml-graphics", "sfml-system" }
 
 	filter "configurations:Debug"
 		defines { "DEBUG" }
