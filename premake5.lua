@@ -31,24 +31,3 @@ project "ChessFw"
 		optimize "On"
 
 	filter {}
-
-project "ChessApp"
-	kind "ConsoleApp"
-	language "C++"
-	useCpp20()
-
-	targetdir "Examples/Bin/%{cfg.buildcfg}"
-	objdir "Examples/Obj"
-
-	files { "Examples/ChessApp/Source/**.cpp" }
-	includedirs { "Include" }
-
-	links { "ChessFw", "sfml-graphics", "sfml-system", "sfml-window" }
-
-	filter "configurations:Debug"
-		defines { "DEBUG" }
-		symbols "On"
-
-	filter "configurations:Release"
-		defines { "RELEASE" }
-		optimize "On"
