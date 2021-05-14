@@ -12,7 +12,7 @@ function useCpp20()
 end
 	
 project "ChessFw"
-	kind "StaticLib"
+	kind "SharedLib"
 	language "C++"
 	useCpp20()
 
