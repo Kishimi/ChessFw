@@ -9,7 +9,7 @@ int main()
 		Game game;
 		game.Run();
 	}
-	catch(const std::exception& e)
+	catch (const std::exception& e)
 	{
 		std::cerr << e.what() << "\n";
 	}
